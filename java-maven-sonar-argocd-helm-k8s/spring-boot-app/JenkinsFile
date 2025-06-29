@@ -1,13 +1,28 @@
 pipeline {
 agent any
-
+tools {
+          maven "Maven3"
+     }
 environments {
-
+          SONARQUBE_ENV = "mysonarqube"
 }
 stages {
 stage('checkout') {
+     steps {
      git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
+     }
 }
-}
-}
-}
+
+stage(code qulaity check) {
+     steps {
+               withSonarQubeEnv("${"SONARQUBE_ENV"})
+                    sh 'mvn clean verify sonar:soanr'
+                    }
+               }
+          }
+     }
+}          
+
+
+
+
