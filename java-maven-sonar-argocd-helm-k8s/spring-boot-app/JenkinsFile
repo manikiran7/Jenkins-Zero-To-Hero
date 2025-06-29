@@ -5,7 +5,8 @@ pipeline {
                }
           environment {
                     SONARQUBE_ENV = "mysonarqube"
-          }
+                    DOCKER_IMAGE = "manikiran7/firstrepo"
+                    DOCKER_CREDENTIAL = "dockerhub-creds"          }
           stages {
           stage('Checkout') {
                steps {
@@ -26,11 +27,25 @@ pipeline {
                                          dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
                                         sh  'mvn clean package -Dskipstests'
                                 }
-                         }
+                          }
                     }
               }
-        }       
+          stage('Docker Build & Push image') {
+                                        dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                                        script {         
+                                        def tag = "{$BUILD_NUMBER}" 
+                                        WthCredialIs([(UsernamePassword(CredentiaID: "{$DOCKER_CREDENTIAL}" , UsernameVariabel: 'DOKERUSER' PasswordVariabel: 'DOCKERPASS')]) {
+                                                  sh """
+                                                     docker build -t $(DOCKER_IMAGE}:{$tag} .     
+                                                     docker login -u "{$DOCKERUSER)" --pasword-stdin
+                                                     docker push ${DOCKER_IMAGE}:"tag}
+                                                    """
+                                                    }           
+                                                  }
+                                             }
+                                        }
+                              }
 
-
+                              
 
 
