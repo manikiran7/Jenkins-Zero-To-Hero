@@ -1,28 +1,35 @@
 pipeline {
-agent any
-tools {
-          maven "Maven3"
-     }
-environment {
-          SONARQUBE_ENV = "mysonarqube"
-}
-stages {
-stage('Checkout') {
-     steps {
-     git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
-     }
-}
-
-stage('Code Qulaity Check') {
-     steps {
-                    dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                    withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'mvn clean verify sonar:sonar'
-                         }                    
-                    }
+          agent any
+          tools {
+                    maven "Maven3"
+               }
+          environment {
+                    SONARQUBE_ENV = "mysonarqube"
+          }
+          stages {
+          stage('Checkout') {
+               steps {
+               git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
                }
           }
-     }
+
+          stage('Code Qulaity Check') {
+               steps {
+                              dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                              withSonarQubeEnv("${SONARQUBE_ENV}") {
+                              sh 'mvn clean verify sonar:sonar'
+                       }                    
+                    }
+               }
+          stage('Maven Buils') {
+          steps {
+                               dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                               mvn clean package -Dskipstests
+                                }
+                         }
+                    }
+              }
+        }
 }          
 
 
