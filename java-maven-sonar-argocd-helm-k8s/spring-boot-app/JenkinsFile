@@ -15,8 +15,10 @@ stage('Checkout') {
 
 stage('Code Qulaity Check') {
      steps {
-               withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                    withSonarQubeEnv("${SONARQUBE_ENV}") {
                     sh 'mvn clean verify sonar:soanr'
+                         }                    
                     }
                }
           }
