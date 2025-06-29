@@ -15,7 +15,7 @@ stage('Checkout') {
 
 stage('Code Qulaity Check') {
      steps {
-               withSonarQubeEnv("${"SONARQUBE_ENV"})
+               withSonarQubeEnv("${"SONARQUBE_ENV"}) {
                     sh 'mvn clean verify sonar:soanr'
                     }
                }
