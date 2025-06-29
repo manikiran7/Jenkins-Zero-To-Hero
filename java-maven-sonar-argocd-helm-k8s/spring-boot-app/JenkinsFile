@@ -9,22 +9,22 @@ pipeline {
           stages {
           stage('Checkout') {
                steps {
-               git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
-               }
-          }
-
+                                        git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
+                                   }
+                              }
+                        }
           stage('Code Qulaity Check') {
-               steps {
-                              dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                              withSonarQubeEnv("${SONARQUBE_ENV}") {
-                              sh 'mvn clean verify sonar:sonar'
-                       }                    
+                         steps {
+                                        dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                                        withSonarQubeEnv("${SONARQUBE_ENV}") {
+                                        sh 'mvn clean verify sonar:sonar'
+                              }                    
                     }
-               }
+          }
           stage('Maven Buils') {
           steps {
-                               dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                              sh  'mvn clean package -Dskipstests'
+                                         dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                                        sh  'mvn clean package -Dskipstests'
                                 }
                          }
                     }
