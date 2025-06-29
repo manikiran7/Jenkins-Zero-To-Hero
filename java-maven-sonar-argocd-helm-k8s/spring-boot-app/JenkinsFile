@@ -17,7 +17,8 @@ pipeline {
                                         dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
                                         withSonarQubeEnv("${SONARQUBE_ENV}") {
                                         sh 'mvn clean verify sonar:sonar'
-                              }                    
+                                        }                    
+                              }
                     }
           }
           stage('Maven Buils') {
