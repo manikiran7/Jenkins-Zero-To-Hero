@@ -24,7 +24,7 @@ pipeline {
           stage('Maven Buils') {
           steps {
                                dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                               mvn clean package -Dskipstests
+                              sh  'mvn clean package -Dskipstests'
                                 }
                          }
                     }
