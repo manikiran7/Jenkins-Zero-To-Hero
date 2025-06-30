@@ -38,11 +38,11 @@ pipeline {
                                         WthCredentials([
                                                             UsernamePassword(CredentiaID: "{$DOCKER_CREDENTIAL}" , usernameVariabel: 'DOKERUSER', passwordVariabel: 'DOCKERPASS')
                                                   ]) {
-                                                  sh """
+                                                  sh '''
                                                      docker build -t $(DOCKER_IMAGE}:{$tag} .     
                                                      docker login -u "{$DOCKERUSER}" --password-stdin
                                                      docker push ${DOCKER_IMAGE}:${tag}
-                                                  """
+                                                  '''
                                                     }           
                                                   }
                                              }
