@@ -30,6 +30,7 @@ pipeline {
                           }
                     }
               }
+
           stage('Docker Build & Push image') {
                               steps {
                                         dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
