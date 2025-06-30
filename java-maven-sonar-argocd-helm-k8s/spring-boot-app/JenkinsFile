@@ -35,7 +35,7 @@ pipeline {
                                         dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
                                         script {         
                                         def tag = "${BUILD_NUMBER}" 
-                                        WthCredentials([UsernamePassword(CredentiaID: "{$DOCKER_CREDENTIAL}" , usernameVariabel: 'DOKERUSER', passwordVariabel: 'DOCKERPASS']) {
+                                        WthCredentials([UsernamePassword(CredentiaID: "{$DOCKER_CREDENTIAL}" , usernameVariabel: 'DOKERUSER', passwordVariabel: 'DOCKERPASS')]) {
                                                   sh """
                                                      docker build -t $(DOCKER_IMAGE}:{$tag} .     
                                                      docker login -u "{$DOCKERUSER}" --password-stdin
