@@ -1,60 +1,56 @@
 pipeline {
           agent any
           tools {
-                    maven "Maven3"
-               }
+                    maven 'Maven3'
+          }
           environment {
-                    SONARQUBE_ENV = "mysonarqube"
-                    DOCKER_IMAGE = "manikiran7/firstrepo"
-                    DOCKER_CREDENTIAL = "dockerhub-creds"          }
+                    SONARQUBE_ENV = 'mysonarqube'
+                    DOCKER_IMAGE = 'manikiran7/firstrepo'
+                    DOCKER_CREDENTIAL = 'dockerhub-creds'          }
           stages {
           stage('Checkout') {
                steps {
-                                        git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
-                                   }
-                              }
+                    git branch: 'main', url: 'https://github.com/manikiran7/Jenkins-Zero-To-Hero.git'
+               }
+          }
           stage('Code Qulaity Check') {
                          steps {
-                                        dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                                        withSonarQubeEnv("${SONARQUBE_ENV}") {
+                    dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                         withSonarQubeEnv("${SONARQUBE_ENV}") {
                                         sh 'mvn clean verify sonar:sonar'
-                                        }                    
-                              }
+                         }
                     }
+                         }
           }
           stage('Maven Buils') {
-          steps {
-                                         dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                                        sh  'mvn clean package -Dskipstests'
-                                }
-                          }
+               steps {
+                    dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                         sh  'mvn clean package -Dskipstests'
                     }
-              }
+               }
+          }
+          }
 
           stage('Docker Build & Push image') {
-                              steps {
-                                        dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
-                                        script {         
-                                        def tag = "${BUILD_NUMBER}" 
-                                        WthCredentials([
-                                                            UsernamePassword(CredentiaID: "{$DOCKER_CREDENTIAL}" , usernameVariabel: 'DOKERUSER', passwordVariabel: 'DOCKERPASS')
-                                                  ]) {
-                                                  sh '''
-                                                     docker build -t $(DOCKER_IMAGE}:{$tag} .     
+          steps {
+               dir('java-maven-sonar-argocd-helm-k8s/spring-boot-app') {
+                    script {
+                         def tag = "${BUILD_NUMBER}"
+                         WthCredentials([UsernamePassword(CredentiaID: "{$DOCKER_CREDENTIAL}" , usernameVariabel: 'DOKERUSER', passwordVariabel: 'DOCKERPASS')]) {
+                              sh ""
+                                                     docker build -t $(DOCKER_IMAGE}:{$tag} .
                                                      docker login -u "{$DOCKERUSER}" --password-stdin
                                                      docker push ${DOCKER_IMAGE}:${tag}
-                                                  '''
-                                                    }           
+                                                  ""
                                                   }
-                                             }
-                                        }
-                                 }
-                              }
-
-          post {
-                    always {
-                              cleanWs()
+                    }
+               }
+          }
           }
 }
 
-
+          post {
+     always {
+          cleanWs()
+     }
+          }
